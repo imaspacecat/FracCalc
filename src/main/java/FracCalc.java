@@ -3,13 +3,14 @@ import java.util.Scanner;
 public class FracCalc {
 
     public static void main(String[] args) {
-        System.out.println(op("1/2", "3/4", '+'));
-        System.out.println(op("1/2", "3/4", '-'));
-        System.out.println(op("1/2", "3/4", '*'));
-        System.out.println(op("1/2", "3/4", '/'));
+//        System.out.println(op("11/2", "3/4", '+'));
+//        System.out.println(op("1/2", "33/4", '-'));
+//        System.out.println(op("1/2", "3/4", '*'));
+//        System.out.println(op("1/2", "3/4", '/'));
 
-        String testFrac = "1_1/2 + 3_5/4";
-        System.out.println("whole sum: " + wholeOp(testFrac, 6, '+'));
+        String testFrac = "3332_1/2 - 413_5/4";
+        int testIndex = testFrac.indexOf('-');
+//        System.out.println("whole sum: " + wholeOp(testFrac, testIndex, '-'));
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter two fractions separated by a '+'");
@@ -43,33 +44,18 @@ public class FracCalc {
             for (int j = 0; j < fracS.length(); j++) {
                 if(i != fracS.length()-1) {
                     if (fracS.charAt(i) == '*'){
-                        System.out.println(wholeOp(fracS, i, '*'));
-//                        for (int k = fracS.indexOf('*'); k > 0; k--) {
-//                            if(fracS.charAt(k) == ' '){
-//                                if(whitespaces == 1){
-//                                    whitepos = k;
-//                                }
-//                                whitespaces++;
-//                            }
-//                            if(whitespaces == 2) {
-//                                if (fracS.charAt(k) == '_') {
-//                                    whole1 = Integer.parseInt(fracS.substring(whitepos, k));
-//                                }
-//                            }
-//                        }
-//
-//                        for (int k = fracS.indexOf('*'); k < fracS.length(); k++) {
-//                            if (fracS.charAt(k) == '_') {
-//                                whole2 = Integer.parseInt(fracS.substring(fracS.indexOf('*')+1, k));
-//                            }
-//                        }
-
+                        System.out.println(wholeOp(fracS, '*'));
+                        System.out.println(op(frac, '*'));
                     } else if(fracS.charAt(i) == ' ' && fracS.charAt(i + 1) == '/'){
+                        System.out.println(wholeOp(fracS, '/'));
+                        System.out.println(op(frac, '/'));
 
                     } else if(fracS.charAt(i) == '+'){
-                        System.out.println(wholeOp(fracS, i, '+'));
+                        System.out.println(wholeOp(fracS, '+'));
+                        System.out.println(op(frac, '+'));
                     } else {
-                        System.out.println(wholeOp(fracS, i, '-'));
+                        System.out.println(wholeOp(fracS, '-'));
+                        System.out.println(op(frac, '-'));
                     }
 
                 }
@@ -83,11 +69,18 @@ public class FracCalc {
     }
 
     // basic operations with fractions
-    public static String op(String frac1, String frac2, char op){
-        int nume1 = Integer.parseInt(frac1.substring(0, 1));
-        int den1 = Integer.parseInt(frac1.substring(2));
-        int nume2 = Integer.parseInt(frac2.substring(0, 1));
-        int den2 = Integer.parseInt(frac2.substring(2));
+    public static String op(String frac, char op){
+
+        frac = frac.replaceAll("( [1-9]*_)", " ").strip();
+        System.out.println(frac);
+        String frac1 = frac.substring(0, frac.indexOf(' '));
+        String frac2 = frac.substring(frac.indexOf('+')+2);
+        System.out.println(frac1 + frac2);
+
+        int nume1 = Integer.parseInt(frac1.substring(0, frac1.indexOf('/')));
+        int den1 = Integer.parseInt(frac1.substring(frac1.indexOf('/')+1));
+        int nume2 = Integer.parseInt(frac2.substring(0, frac2.indexOf('/')));
+        int den2 = Integer.parseInt(frac2.substring(frac2.indexOf('/')+1));
 
         int den = den1 * den2;
         int nume;
@@ -112,29 +105,31 @@ public class FracCalc {
         return nume + "/" + den;
     }
 
-    public static int wholeOp(String frac, int opIndex, char op){
+    public static int wholeOp(String frac, char op){
+        int opIndex = frac.indexOf(op);
         int whole1 = 0;
         int whole2 = 0;
         int whitespaces = 0;
         int whitepos = 0;
+        int slashpos = 0;
         frac = " " + frac + " ";
         System.out.println(frac);
-        for (int k = opIndex; k >= 0; k--) {
+        for (int k = opIndex+1; k >= 0; k--) { // scuffed fix
             System.out.println("char: " + frac.charAt(k));
             if(frac.charAt(k) == ' '){
+                System.out.println("space");
                 if(whitespaces == 1){
                     whitepos = k;
                 }
                 whitespaces++;
             }
+            if(frac.charAt(k) == '_'){
+                slashpos = k;
+            }
 
-            if (frac.charAt(k) == '_') {
-                System.out.println("ere");
-                if (whitespaces == 2) {
-                    System.out.println("sub1: " + frac.substring(whitepos, k));
-                    whole1 = Integer.parseInt(frac.substring(whitepos, k));
-
-                }
+            if (whitespaces == 2) {
+                System.out.println("sub1: " + frac.substring(whitepos, slashpos));
+                whole1 = Integer.parseInt(frac.substring(whitepos, slashpos).strip());
             }
         }
 
@@ -151,39 +146,4 @@ public class FracCalc {
         if(op == '/') return whole1 / whole2;
         return -1;
     }
-//     for(int i = 0; i < fracS.length(); i++) {
-//
-//
-////            if(fracS.charAt(i) == '+' || fracS.charAt(i) == '-' ||
-////                    fracS.charAt(i) == '*' || fracS.charAt(i) == '/'){
-////                operatorI = i;
-////            }
-////
-////            if(fracS.charAt(i) == '_'){
-////                if(whole1 == -1){
-////                    whole1 = i;
-////                } else{
-////                    whole2 = i;
-////                }
-////            }
-////
-////            if(fracS.charAt(i) == ' '){
-////                if(white1 == -1){
-////                    white1 = i;
-////                } else{
-////                    white2 = i;
-////                }
-////            }
-//        }
-////        String frac1 = fracS.substring(operatorI+1).strip();
-////        String frac2 = fracS.substring(0, operatorI).strip();
-////        System.out.println(fracS.substring(0, whole1) + " " + fracS.substring(white2, whole2));
-////        int whole1Num = Integer.parseInt(fracS.substring(0, whole1).strip());
-////        int whole2Num = Integer.parseInt(fracS.substring(white2, whole2).strip());
-////        System.out.println(frac1 + " " + frac2);
-////        System.out.println("wholes are " + whole1Num + " " + whole2Num);
-//
-//
-//
-//
 }
