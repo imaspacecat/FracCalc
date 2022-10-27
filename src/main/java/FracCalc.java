@@ -3,12 +3,16 @@ import java.util.Scanner;
 public class FracCalc {
 
     public static void main(String[] args) {
+
+        // fuck this code im doing everything with regex
 //        System.out.println(op("11/2", "3/4", '+'));
 //        System.out.println(op("1/2", "33/4", '-'));
 //        System.out.println(op("1/2", "3/4", '*'));
 //        System.out.println(op("1/2", "3/4", '/'));
 
-        String testFrac = "3332_1/2 - 413_5/4";
+
+        String testFrac = "31_1/2 + 56_5/4";
+        System.out.println(wholeOp(testFrac, '+'));
         int testIndex = testFrac.indexOf('-');
 //        System.out.println("whole sum: " + wholeOp(testFrac, testIndex, '-'));
 
@@ -40,27 +44,27 @@ public class FracCalc {
 //
 //        int whitespaces = 0;
 //        int whitepos = 0;
-        for (int i = 0; i < ops; i++) {
+//        for (int i = 0; i < ops; i++) {
             for (int j = 0; j < fracS.length(); j++) {
-                if(i != fracS.length()-1) {
-                    if (fracS.charAt(i) == '*'){
-                        System.out.println(wholeOp(fracS, '*'));
-                        System.out.println(op(frac, '*'));
-                    } else if(fracS.charAt(i) == ' ' && fracS.charAt(i + 1) == '/'){
-                        System.out.println(wholeOp(fracS, '/'));
-                        System.out.println(op(frac, '/'));
+                if(j != fracS.length()-1) {
+                    if (fracS.charAt(j) == '*'){
+                        System.out.println("whole is: " + wholeOp(fracS, '*'));
+//                        System.out.println(op(frac, '*'));
+                    } else if(fracS.charAt(j) == ' ' && fracS.charAt(j + 1) == '/'){
+                        System.out.println("whole is: " + wholeOp(fracS, '/'));
+//                        System.out.println(op(frac, '/'));
 
-                    } else if(fracS.charAt(i) == '+'){
-                        System.out.println(wholeOp(fracS, '+'));
-                        System.out.println(op(frac, '+'));
-                    } else {
-                        System.out.println(wholeOp(fracS, '-'));
-                        System.out.println(op(frac, '-'));
+                    } else if(fracS.charAt(j) == '+'){
+                        System.out.println("whole is: " + wholeOp(fracS, '+'));
+//                        System.out.println(op(frac, '+'));
+                    } else if(fracS.charAt(j) == '-'){
+                        System.out.println("whole is: " + wholeOp(fracS, '-'));
+//                        System.out.println(op(frac, '-'));
                     }
 
                 }
 
-            }
+//            }
         }
 
 
@@ -74,7 +78,7 @@ public class FracCalc {
         frac = frac.replaceAll("( [1-9]*_)", " ").strip();
         System.out.println(frac);
         String frac1 = frac.substring(0, frac.indexOf(' '));
-        String frac2 = frac.substring(frac.indexOf('+')+2);
+        String frac2 = frac.substring(frac.indexOf(op)+2);
         System.out.println(frac1 + frac2);
 
         int nume1 = Integer.parseInt(frac1.substring(0, frac1.indexOf('/')));
@@ -127,7 +131,7 @@ public class FracCalc {
                 slashpos = k;
             }
 
-            if (whitespaces == 2) {
+            if (whitespaces == 2 && slashpos != 0) {
                 System.out.println("sub1: " + frac.substring(whitepos, slashpos));
                 whole1 = Integer.parseInt(frac.substring(whitepos, slashpos).strip());
             }
@@ -135,11 +139,15 @@ public class FracCalc {
 
         for (int k = opIndex; k < frac.length(); k++) {
             if (frac.charAt(k) == '_') {
-                System.out.println("sub: " + frac.substring(frac.indexOf(op)+2, k));
-                whole2 = Integer.parseInt(frac.substring(frac.indexOf(op)+2, k));
+                String substring = frac.substring(frac.indexOf(op) + 2, k);
+                System.out.println("sub: " + substring);
+                whole2 = Integer.parseInt(substring);
             }
         }
-
+        if(op == '*' || op == '/'){
+            whole1 = whole1 == 0 ? 1 : whole1;
+            whole2 = whole2 == 0 ? 1 : whole2;
+        }
         if(op == '+') return whole1 + whole2;
         if(op == '-') return whole1 - whole2;
         if(op == '*') return whole1 * whole2;
