@@ -13,6 +13,7 @@ public class Testing {
             if(c == '*' || c == '/'){
 
                 whole = whole.replaceFirst("(\\d+ (\\*|\\/) \\d)", "");
+                System.out.println(whole);
                 System.out.println("temp is: " + temp);
                 sum += addString(temp, c);
             }
@@ -29,5 +30,14 @@ public class Testing {
         if(op == '*') return n1 * n2;
         if(op == '/') return n1 / n2;
         return -1;
+    }
+
+
+    public static String convertToPartialFrac(String s){
+        int whole = Integer.parseInt(s.substring(0, s.indexOf('_')));
+        int den = Integer.parseInt(s.substring(s.indexOf('_') + 1), s.indexOf('/'));
+        int num = Integer.parseInt(s.substring(s.indexOf('/') + 1));
+        int nNum = num + num * whole;
+        return nNum + "/" + den;
     }
 }
