@@ -13,7 +13,7 @@ public class SoMuchPain {
         System.out.println("Enter a series of fractions: ");
         frac = s.nextLine();
 
-        // a lot of regex because why not
+        // convert whole numbers to fractions
         p = Pattern.compile("(\\d+_\\d+\\/\\d+)");
         m = p.matcher(frac);
         while(m.find()){
@@ -26,6 +26,7 @@ public class SoMuchPain {
             frac = frac.replace(m.group(1), " " + m.group(1).strip() + "/1 ");
         }
 
+        // solve * and /
         p = Pattern.compile("(\\d+\\/\\d+) (\\*|\\/) (\\d+\\/\\d+)");
         m = p.matcher(frac);
         while(m.find()){
@@ -33,6 +34,7 @@ public class SoMuchPain {
                     op(m.group(1), m.group(3), m.group(2).charAt(0)));
         }
 
+        // solve - and +
         p = Pattern.compile("(\\d+\\/\\d+) (\\+|\\-) (\\d+\\/\\d+)");
         m = p.matcher(frac);
         while(m.find()){
@@ -83,15 +85,5 @@ public class SoMuchPain {
     private static String asFraction(int a, int b) {
         int gcd = gcd(a, b);
         return (a / gcd) + "/" + (b / gcd);
-    }
-
-    public static String processString(String regex, Pattern p, Matcher m, String s,
-                                       String old, String replace){
-        p = Pattern.compile(regex);
-        m = p.matcher(frac);
-        while(m.find()){
-            frac = frac.replaceFirst(old, replace);
-        }
-        return frac;
     }
 }
