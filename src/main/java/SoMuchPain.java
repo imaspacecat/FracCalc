@@ -8,6 +8,7 @@ public class SoMuchPain {
     private static Matcher m;
     private static Scanner s;
     public static void main(String[] args) {
+        System.out.println(format("93897/322"));
         // input
         s = new Scanner(System.in);
         System.out.println("Enter a series of fractions: ");
@@ -20,7 +21,7 @@ public class SoMuchPain {
             frac = frac.replaceFirst(m.group(1), convertToFrac(m.group(1)));
         }
 
-        p = Pattern.compile("( \\d )");
+        p = Pattern.compile("( ?\\d ?)");
         m = p.matcher(frac);
         while(m.find()){
             frac = frac.replace(m.group(1), " " + m.group(1).strip() + "/1 ");
@@ -42,7 +43,7 @@ public class SoMuchPain {
                     op(m.group(1), m.group(3), m.group(2).charAt(0)));
             m = p.matcher(frac);
         }
-        System.out.println("Solution: " + frac);
+        System.out.println("Solution: " + format(frac.strip()));
 
     }
 
@@ -85,5 +86,17 @@ public class SoMuchPain {
     private static String asFraction(int a, int b) {
         int gcd = gcd(a, b);
         return (a / gcd) + "/" + (b / gcd);
+    }
+
+    private static String format(String input){
+        if(!input.contains("/")) return input;
+
+        int num = Integer.parseInt(input.substring(0, input.indexOf("/")));
+        int den = Integer.parseInt(input.substring(input.indexOf("/")+1));
+
+        if(den == 1) return String.valueOf(num);
+        if(Math.abs(num)<Math.abs(den)) return num + "/" + den;
+        return num/den+"_" + Math.abs(num%den) + "/" + den;
+
     }
 }
