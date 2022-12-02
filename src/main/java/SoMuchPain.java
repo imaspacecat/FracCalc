@@ -13,6 +13,7 @@ public class SoMuchPain {
         s = new Scanner(System.in);
         System.out.println("Enter a series of fractions: ");
         frac = s.nextLine();
+        frac = " " + frac + " ";
 
         // convert whole numbers to fractions
         p = Pattern.compile("(\\d+_\\d+\\/\\d+)");
@@ -21,7 +22,7 @@ public class SoMuchPain {
             frac = frac.replaceFirst(m.group(1), convertToFrac(m.group(1)));
         }
 
-        p = Pattern.compile("( ?\\d ?)");
+        p = Pattern.compile("( \\d+ )");
         m = p.matcher(frac);
         while(m.find()){
             frac = frac.replace(m.group(1), " " + m.group(1).strip() + "/1 ");
